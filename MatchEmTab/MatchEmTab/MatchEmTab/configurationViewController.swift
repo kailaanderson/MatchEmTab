@@ -9,6 +9,7 @@ import UIKit
 
 class configurationViewController: UIViewController {
 
+    var gameVC: GameSceneViewController?
     override func viewDidLoad() {
         super.viewDidLoad()
 
