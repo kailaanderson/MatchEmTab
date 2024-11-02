@@ -19,9 +19,18 @@ class GameSceneViewController: UIViewController {
     //keeps track of game progress
     var gameStarted: Bool = false;
     var gameEnded: Bool = false;
+    var gamePaused: Bool = false;
     
-    //number of pairs, pairs found, and seconds left
-    var totalNumOfPairs = Int.random(in: 5...8); //generate 6-10 random pairs
+    //for highscores
+    var highScore: Int = 0;
+    var midScore: Int = 0;
+    var lowScore: Int = 0;
+        
+    
+    //index variable to keep track of rectangle pairs
+    var rectIndex: Int = 0;
+    
+    //number of pairs found and seconds left
     var numOfPairsFound: Int = 0;
     var secondsLeft: Int = 12;
     
@@ -30,10 +39,14 @@ class GameSceneViewController: UIViewController {
     var buttonPair: [UIButton] = [];
     var rectangles = [UIButton]();
     
-    //timer setup
+    //game timer setup
     private var timeInterval: TimeInterval = 1.5;
     private var timer = Timer();
-
+    
+    //rectangle timer
+    var newRectInterval: TimeInterval = 1.0;
+    var newRectTimer: Timer?
+    
     //start button presented when app opens
     @IBOutlet weak var startButton: UIButton!
     @IBAction func startButton(_ sender: Any) {
@@ -60,7 +73,7 @@ class GameSceneViewController: UIViewController {
         
         // print values
         timeCounter.text = ("\(secondsLeft) Seconds Left");
-        pairCounter.text = ("\(numOfPairsFound) / \(totalNumOfPairs + 1) Pairs Found");
+        pairCounter.text = ("\(numOfPairsFound) Pairs Found");
         
         // restart the game
         gameEnded = false;
@@ -72,11 +85,13 @@ class GameSceneViewController: UIViewController {
         // Set time counter to number of seconds left and Set pair counter to number of pairs
         // only if game is not over
         
-        if(!gameEnded){
+        if(!gameEnded && !gamePaused){
+            
             timeCounter.text = ("\(secondsLeft) Seconds Left");
-            pairCounter.text = ("\(numOfPairsFound) / \(totalNumOfPairs + 1) Pairs Found");
+            pairCounter.text = ("\(numOfPairsFound) Pairs Found");
             
             timer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(GameSceneViewController.gameTimer), userInfo: nil, repeats: true)
+            
         }
     }
     
@@ -88,9 +103,13 @@ class GameSceneViewController: UIViewController {
         pairCounter.isHidden = false;
         
         //create random amount of pairs
-        for index in 0...totalNumOfPairs {
-            randomPairs(rectTag: index);
-        }
+        self.newRectTimer = Timer.scheduledTimer(withTimeInterval: self.newRectInterval, repeats: true, block: {_ in
+            if(!self.gameEnded && !self.gamePaused){
+                self.randomPairs(rectTag: self.rectIndex); //create rectangle pair
+                self.rectIndex += 1; //increment index number
+            }
+            })
+        
     }
     
     // timer setup
@@ -102,29 +121,44 @@ class GameSceneViewController: UIViewController {
         timeCounter.text = ("\(secondsLeft) Seconds Left");
         secondsLeft -= 1;
         
-        //game ends if player runs out of time or finds all pairs
-        if (secondsLeft == 0 || numOfPairsFound == totalNumOfPairs + 1){
+        //game ends if player runs out of time
+        if (secondsLeft == 0){
             
             //clear view
             timeCounter.isHidden = true;
             pairCounter.isHidden = true;
             
-            //display restart button
-            restartButton.isHidden = false;
-            gameEnded = true;
-            secondsLeft = 12;
-            
             //delete rectangles
             removeSavedRectangles();
             
-            //if win, set win text
-            if(numOfPairsFound == totalNumOfPairs + 1){
-                winText.isHidden = false;
+            //display restart button
+            restartButton.isHidden = false;
+            gameEnded = true;
+
+            
+            //display end of game text
+            winText.text = ("You found \(numOfPairsFound) Pairs!");
+            winText.isHidden = false;
+            
+            //record high scores
+            if (numOfPairsFound > highScore){
+                //change score values - new high Score
+                lowScore = midScore;
+                midScore = highScore;
+                highScore = numOfPairsFound
             }
-            //if lose, set lose text
-            else {
-                loseText.isHidden = false;
+            else if (numOfPairsFound > midScore){
+                //change score values - new middle score
+                lowScore = midScore;
+                midScore = numOfPairsFound
             }
+            else if (numOfPairsFound > lowScore){
+                lowScore = numOfPairsFound
+            }
+            var scoreKeeper = GameManager(highScore: highScore, midScore: midScore, lowScore: lowScore);
+            //display high score text
+            //for debugging:
+            print("hs: \(scoreKeeper.highScore), ms: \(scoreKeeper.midScore), ls: \(scoreKeeper.lowScore) \n")
         }
     }
     
@@ -198,7 +232,7 @@ class GameSceneViewController: UIViewController {
                     
                     //update number of pairs found
                     numOfPairsFound += 1;
-                    pairCounter.text = ("\(numOfPairsFound) / \(totalNumOfPairs + 1) Pairs Found");
+                    pairCounter.text = ("\(numOfPairsFound) Pairs Found");
                     
                     //hide match
                     if (buttonPair.last == nil) {print("no value")} //for debugging
@@ -227,6 +261,23 @@ class GameSceneViewController: UIViewController {
         rectangles.removeAll();
     }
 
+
+}
+
+class GameManager {
+    var highScore: Int;
+    var midScore: Int;
+    var lowScore: Int;
+
+    init(highScore: Int, midScore: Int, lowScore: Int) {
+        self.highScore = highScore
+        self.midScore = midScore
+        self.lowScore = lowScore
+    }
+    
+    //init(highScore: Int){self.highScore = highScore}
+    //init(midScore: Int){self.midScore = midScore}
+    //init(lowScore: Int){self.lowScore = lowScore}
 
 }
 
