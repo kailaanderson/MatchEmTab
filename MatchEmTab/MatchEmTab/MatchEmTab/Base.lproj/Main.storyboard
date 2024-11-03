@@ -62,6 +62,9 @@
                                     <segment title="MultiColored"/>
                                     <segment title="Gray"/>
                                 </segments>
+                                <connections>
+                                    <action selector="changeColor:" destination="x6p-6M-HA6" eventType="valueChanged" id="x6u-F2-pI8"/>
+                                </connections>
                             </segmentedControl>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" value="15" minimumValue="10" maximumValue="20" translatesAutoresizingMaskIntoConstraints="NO" id="Bba-NF-KUf">
                                 <rect key="frame" x="283" y="275" width="94" height="32"/>
@@ -99,6 +102,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Config" image="gear" catalog="system" id="NeI-8w-50M"/>
                     <connections>
+                        <outlet property="colorSelector" destination="tMj-W6-fKT" id="lhH-MA-fZx"/>
                         <outlet property="durationStepper" destination="Bba-NF-KUf" id="BMP-L9-tpf"/>
                         <outlet property="durationText" destination="88s-Yp-qzR" id="kBY-AK-W9L"/>
                     </connections>

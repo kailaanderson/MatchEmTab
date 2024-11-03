@@ -33,6 +33,21 @@ class configurationViewController: UIViewController {
     // game speed control
     
     // color control
+    @IBOutlet weak var colorSelector: UISegmentedControl!
+    @IBAction func changeColor(_ sender: UISegmentedControl) {
+        if colorSelector.selectedSegmentIndex == 0 {
+            //multicolored
+            if let gvc = gameVC {
+                gvc.multicolored = true;
+            }
+        }
+        else {
+            if let gvc = gameVC {
+                gvc.multicolored = false;
+            }
+        }
+    }
+    
     
     // game duration control
     @IBOutlet weak var durationText: UILabel!

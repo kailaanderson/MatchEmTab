@@ -47,6 +47,9 @@ class GameSceneViewController: UIViewController {
     var newRectInterval: TimeInterval = 1.0;
     var newRectTimer: Timer?
     
+    //decides if rectangles have color or are gray
+    var multicolored: Bool = true;
+    
     //start button presented when app opens
     @IBOutlet weak var startButton: UIButton!
     @IBAction func startButton(_ sender: Any) {
@@ -177,7 +180,12 @@ class GameSceneViewController: UIViewController {
         //create first rectangle
         let rectangleFrame1 = CGRect(x: CGFloat(randX), y:CGFloat(randY), width: CGFloat(randWidth), height: CGFloat(randHeight));
         let rectangle1 = UIButton(frame: rectangleFrame1);
-        rectangle1.backgroundColor = .init(red: randomColor[0], green: randomColor[1], blue: randomColor[2], alpha: 1)
+        if multicolored {
+            rectangle1.backgroundColor = .init(red: randomColor[0], green: randomColor[1], blue: randomColor[2], alpha: 1)
+        }
+        else {
+            rectangle1.backgroundColor = .init(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+        }
         rectangle1.tag = rectTag;
         
         //create second rectangle with new x and y values
@@ -185,7 +193,14 @@ class GameSceneViewController: UIViewController {
         randY = Int.random(in: 50...600);
         let rectangleFrame2 = CGRect(x: CGFloat(randX), y: CGFloat(randY), width: CGFloat(randWidth), height: CGFloat(randHeight));
         let rectangle2 = UIButton(frame: rectangleFrame2);
-        rectangle2.backgroundColor = .init(red: randomColor[0], green: randomColor[1], blue: randomColor[2], alpha: 1)
+        
+        if multicolored {
+            rectangle2.backgroundColor = .init(red: randomColor[0], green: randomColor[1], blue: randomColor[2], alpha: 1)
+        }
+        else {
+            rectangle2.backgroundColor = .init(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+        }       
+        
         rectangle2.tag = rectTag;
         
         //make rectangle pair
