@@ -24,9 +24,11 @@ class configurationViewController: UIViewController {
             if viewControllers.count > 1, let gvc = viewControllers[0] as? GameSceneViewController {
                 gameVC = gvc
             }
-            
+            //pause game
+            gameVC?.gamePaused = true;
             gameSetup();
         }
+        speedText.text = String(format: "%.1f", speedSlider.value)
         
     }
     

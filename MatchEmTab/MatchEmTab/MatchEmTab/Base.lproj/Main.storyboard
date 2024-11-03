@@ -158,7 +158,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="fnL-LU-xKM">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="fnL-LU-xKM">
                                 <rect key="frame" x="93" y="370" width="207" height="112"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" systemColor="systemGreenColor"/>
@@ -191,9 +191,14 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="EK7-9y-Sv2" appends="YES" id="b0e-3l-giR"/>
+                        </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="Game" image="gamecontroller" catalog="system" id="rXj-kH-0Vb"/>
                     <connections>
+                        <outlet property="doubleTapRecognizer" destination="EK7-9y-Sv2" id="2MW-ul-Nsd"/>
                         <outlet property="loseText" destination="JcR-4K-Ao7" id="hg1-Uf-Yb3"/>
                         <outlet property="pairCounter" destination="oD9-h4-hR7" id="msc-hX-Eb5"/>
                         <outlet property="restartButton" destination="olR-oY-Nhj" id="j0H-dI-g3J"/>
@@ -203,6 +208,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTouchesRequired="2" id="EK7-9y-Sv2">
+                    <connections>
+                        <action selector="tapRecognizer:" destination="BYZ-38-t0r" id="Wov-Ez-TsY"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-761.06870229007632" y="-504.22535211267609"/>
         </scene>

@@ -19,7 +19,7 @@ class GameSceneViewController: UIViewController {
     //keeps track of game progress
     var gameStarted: Bool = false;
     var gameEnded: Bool = false;
-    var gamePaused: Bool = false;
+    var gamePaused: Bool = true;
     
     //for highscores
     var highScore: Int = 0;
@@ -83,23 +83,56 @@ class GameSceneViewController: UIViewController {
         startGame();
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Set time counter to number of seconds left and Set pair counter to number of pairs
         // only if game is not over
         
-        if(!gameEnded && !gamePaused){
+        /*if(!gameEnded && !gamePaused){
             
             timeCounter.text = ("\(secondsLeft) Seconds Left");
             pairCounter.text = ("\(numOfPairsFound) Pairs Found");
             
             timer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(GameSceneViewController.gameTimer), userInfo: nil, repeats: true)
             
+        }*/
+    }
+    
+    //gesture recognizer
+    @IBOutlet var doubleTapRecognizer: UITapGestureRecognizer!
+    @IBAction func tapRecognizer(_ sender: Any) {
+        if(!gameStarted){
+            //start the game
+            gameStarted = true;
+            gamePaused = false;
+            startGame();
+        }
+        else if (gameStarted && !gamePaused){
+            //pause the game
+            gamePaused = true;
+        }
+        else if (gameStarted && gamePaused){
+            // unpause game
+            gamePaused = false;
+        }
+        else if (gameEnded){
+            //restart game
+            gameEnded = false;
+            gameStarted = true;
         }
     }
     
     
     func startGame(){
+        
+        timeCounter.text = ("\(secondsLeft) Seconds Left");
+        pairCounter.text = ("\(numOfPairsFound) Pairs Found");
+        
+        if(!gameEnded && !gamePaused){
+            timer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(GameSceneViewController.gameTimer), userInfo: nil, repeats: true)
+        }
+
         // shows time left and pair count
         // sets up rectangles
         timeCounter.isHidden = false;
@@ -111,8 +144,28 @@ class GameSceneViewController: UIViewController {
                 self.randomPairs(rectTag: self.rectIndex); //create rectangle pair
                 self.rectIndex += 1; //increment index number
             }
-            })
+        })
         
+    }
+    
+    func restartGame(){
+        print("restart button pressed") //for debugging
+        
+        restartButton.isHidden = true; //hide button when button is pressed
+        
+        // reset values
+        numOfPairsFound = 0;
+        secondsLeft = 12;
+        winText.isHidden = true;
+        loseText.isHidden = true;
+        
+        // print values
+        timeCounter.text = ("\(secondsLeft) Seconds Left");
+        pairCounter.text = ("\(numOfPairsFound) Pairs Found");
+        
+        // restart the game
+        gameEnded = false;
+        startGame();
     }
     
     // timer setup
