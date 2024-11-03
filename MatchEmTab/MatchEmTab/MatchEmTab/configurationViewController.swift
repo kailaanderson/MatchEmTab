@@ -31,6 +31,22 @@ class configurationViewController: UIViewController {
     }
     
     // game speed control
+    @IBOutlet weak var speedText: UILabel!
+    @IBOutlet weak var speedSlider: UISlider!
+    @IBAction func speedAction(_ sender: Any) {
+        //change label text
+        speedText.text = String(format: "%.1f", speedSlider.value)
+        
+        //change speed in game
+        if let gvc = gameVC {
+            gvc.newRectInterval = TimeInterval(speedSlider.value);
+            
+            //for debugging
+            print("\(gvc.newRectInterval)")
+        }
+        
+
+    }
     
     // color control
     @IBOutlet weak var colorSelector: UISegmentedControl!
