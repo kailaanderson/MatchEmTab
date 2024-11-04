@@ -97,6 +97,10 @@ class GameSceneViewController: UIViewController {
             timer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(GameSceneViewController.gameTimer), userInfo: nil, repeats: true)
             
         }*/
+        
+        if(gamePaused){
+            gamePaused = false;
+        }
     }
     
     //gesture recognizer
@@ -120,6 +124,7 @@ class GameSceneViewController: UIViewController {
             //restart game
             gameEnded = false;
             gameStarted = true;
+            restartGame();
         }
     }
     
@@ -174,9 +179,11 @@ class GameSceneViewController: UIViewController {
     // timer for the game. Also checks if game is over
     @objc func gameTimer(){
         //print time left and decrement time
-        timeCounter.text = ("\(secondsLeft) Seconds Left");
-        secondsLeft -= 1;
-        
+        if (!gamePaused){
+            timeCounter.text = ("\(secondsLeft) Seconds Left");
+            secondsLeft -= 1;
+        }
+
         //game ends if player runs out of time
         if (secondsLeft == 0){
             
@@ -186,9 +193,6 @@ class GameSceneViewController: UIViewController {
             
             //delete rectangles
             removeSavedRectangles();
-            
-            //display restart button
-            restartButton.isHidden = false;
             gameEnded = true;
 
             
@@ -213,6 +217,8 @@ class GameSceneViewController: UIViewController {
             }
             var scoreKeeper = GameManager(highScore: highScore, midScore: midScore, lowScore: lowScore);
             //display high score text
+            
+            
             //for debugging:
             print("hs: \(scoreKeeper.highScore), ms: \(scoreKeeper.midScore), ls: \(scoreKeeper.lowScore) \n")
         }
