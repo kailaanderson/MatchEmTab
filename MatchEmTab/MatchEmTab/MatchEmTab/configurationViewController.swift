@@ -103,8 +103,22 @@ class configurationViewController: UIViewController {
     }
     
     
-    // game background color control
-
+    // game background color control (Light Mode/Dark Mode)
+    @IBOutlet weak var backgroundControl: UISwitch!
+    @IBAction func changeBackground(_ sender: Any) {
+        if backgroundControl.isOn {
+            if let gvc = gameVC{
+                gvc.view.backgroundColor = UIColor.black;
+            }
+        }
+        else {
+            if let gvc = gameVC{
+                gvc.view.backgroundColor = UIColor.white;
+            }
+        }
+    }
+    
+    
     /*
     // MARK: - Navigation
 
