@@ -13,8 +13,8 @@ class GameSceneViewController: UIViewController {
     
     @IBOutlet weak var timeCounter: UILabel!
     @IBOutlet weak var pairCounter: UILabel!
-    @IBOutlet weak var loseText: UITextField!
     @IBOutlet weak var winText: UITextField!
+    @IBOutlet weak var instructionText: UILabel!
     
     //keeps track of game progress
     var gameStarted: Bool = false;
@@ -50,54 +50,9 @@ class GameSceneViewController: UIViewController {
     //decides if rectangles have color or are gray
     var multicolored: Bool = true;
     
-    //start button presented when app opens
-    @IBOutlet weak var startButton: UIButton!
-    @IBAction func startButton(_ sender: Any) {
-        print("start button pressed") //for debugging
-        
-        gameStarted = true;
-        startButton.isHidden = true; //hide button when pressed
-        startGame()
-    }
-   
-    //restart button presented when player wins or loses
-
-    @IBOutlet weak var restartButton: UIButton!
-    @IBAction func restartButton(_ sender: Any) {
-        print("restart button pressed") //for debugging
-        
-        restartButton.isHidden = true; //hide button when button is pressed
-        
-        // reset values
-        numOfPairsFound = 0;
-        secondsLeft = 12;
-        winText.isHidden = true;
-        loseText.isHidden = true;
-        
-        // print values
-        timeCounter.text = ("\(secondsLeft) Seconds Left");
-        pairCounter.text = ("\(numOfPairsFound) Pairs Found");
-        
-        // restart the game
-        gameEnded = false;
-        startGame();
-    }
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Set time counter to number of seconds left and Set pair counter to number of pairs
-        // only if game is not over
-        
-        /*if(!gameEnded && !gamePaused){
-            
-            timeCounter.text = ("\(secondsLeft) Seconds Left");
-            pairCounter.text = ("\(numOfPairsFound) Pairs Found");
-            
-            timer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(GameSceneViewController.gameTimer), userInfo: nil, repeats: true)
-            
-        }*/
-        
+       
         if(gamePaused){
             gamePaused = false;
         }
@@ -106,23 +61,26 @@ class GameSceneViewController: UIViewController {
     //gesture recognizer
     @IBOutlet var doubleTapRecognizer: UITapGestureRecognizer!
     @IBAction func tapRecognizer(_ sender: Any) {
-        if(!gameStarted){
+        
+        if(!gameStarted && !gameEnded){
             //start the game
+            print("start game case")
             gameStarted = true;
             gamePaused = false;
             startGame();
         }
-        else if (gameStarted && !gamePaused){
-            //pause the game
-            gamePaused = true;
+        
+        else if (gameStarted){
+            print("pause and resume case")
+            //pause or resume the game
+            gamePaused = !gamePaused
         }
-        else if (gameStarted && gamePaused){
-            // unpause game
-            gamePaused = false;
-        }
+        
         else if (gameEnded){
             //restart game
+            print("restart game case")
             gameEnded = false;
+            gamePaused = false;
             gameStarted = true;
             restartGame();
         }
@@ -131,6 +89,7 @@ class GameSceneViewController: UIViewController {
     
     func startGame(){
         
+        instructionText.isHidden = true;
         timeCounter.text = ("\(secondsLeft) Seconds Left");
         pairCounter.text = ("\(numOfPairsFound) Pairs Found");
         
@@ -154,15 +113,12 @@ class GameSceneViewController: UIViewController {
     }
     
     func restartGame(){
-        print("restart button pressed") //for debugging
-        
-        restartButton.isHidden = true; //hide button when button is pressed
-        
+        print("restart pressed") //for debugging
+                
         // reset values
         numOfPairsFound = 0;
         secondsLeft = 12;
         winText.isHidden = true;
-        loseText.isHidden = true;
         
         // print values
         timeCounter.text = ("\(secondsLeft) Seconds Left");
@@ -170,6 +126,7 @@ class GameSceneViewController: UIViewController {
         
         // restart the game
         gameEnded = false;
+        gameStarted = true;
         startGame();
     }
     
@@ -188,17 +145,14 @@ class GameSceneViewController: UIViewController {
         if (secondsLeft == 0){
             
             //clear view
+            instructionText.isHidden = false;
             timeCounter.isHidden = true;
             pairCounter.isHidden = true;
             
             //delete rectangles
             removeSavedRectangles();
             gameEnded = true;
-
-            
-            //display end of game text
-            winText.text = ("You found \(numOfPairsFound) Pairs!");
-            winText.isHidden = false;
+            gameStarted = false;
             
             //record high scores
             if (numOfPairsFound > highScore){
@@ -216,8 +170,10 @@ class GameSceneViewController: UIViewController {
                 lowScore = numOfPairsFound
             }
             var scoreKeeper = GameManager(highScore: highScore, midScore: midScore, lowScore: lowScore);
-            //display high score text
             
+            //display high score text
+            winText.text = ("You found \(numOfPairsFound) Pairs! \n HighScore: \(highScore)");
+            winText.isHidden = false;
             
             //for debugging:
             print("hs: \(scoreKeeper.highScore), ms: \(scoreKeeper.midScore), ls: \(scoreKeeper.lowScore) \n")

@@ -29,8 +29,22 @@ class configurationViewController: UIViewController {
             gameSetup();
         }
         speedText.text = String(format: "%.1f", speedSlider.value)
+        highScoreText.text = ("High Score: \(gameVC?.highScore ?? 0)")
+        secondScoreText.text = ("- \(gameVC?.midScore ?? 0)");
+        thirdScoreText.text = ("- \(gameVC?.lowScore ?? 0)");
         
+
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        gameVC?.gamePaused = false;
+    }
+    
+    //high score text
+    @IBOutlet weak var highScoreText: UILabel!
+    @IBOutlet weak var secondScoreText: UILabel!
+    @IBOutlet weak var thirdScoreText: UILabel!
+    
     
     // game speed control
     @IBOutlet weak var speedText: UILabel!
